@@ -1,56 +1,54 @@
-# Gestion Foyer - Case Study
+# Gestion Foyer
 
-This is a Spring Boot application for managing university dormitories (foyers), reservations, and students.
+A Spring Boot application for managing university residences (foyers), including students, rooms, reservations, and related entities. The project is organized as a Maven application and uses Spring Data JPA with MySQL.
 
-## Project Structure
+## Technology stack
 
-*   `src/main/java/com/esprit/gestionfoyer`: Main package
-    *   `entities`: JPA entities
-    *   `repositories`: Spring Data JPA repositories
-    *   `services`: Service layer (business logic)
-    *   `aop`: AOP aspects
-    *   `config`: Configuration classes, including data seeding
-*   `src/main/resources`: Application configuration
-    *   `application.properties`: Datasource and JPA configuration
-*   `pom.xml`: Maven project configuration
+- Java 17
+- Spring Boot 3.1
+- Spring Web and Spring Data JPA
+- MySQL
+- Lombok
+- Maven
 
-## Technologies Used
+## Project structure
 
-*   Java 17
-*   Spring Boot 3
-*   Spring Data JPA
-*   Hibernate
-*   MySQL
-*   Lombok
-*   Maven
+- `src/main/java/com/esprit/gestionfoyer` — application source (entities, repositories, services, AOP, and configuration)
+- `src/main/resources/application.properties` — local datasource and JPA settings
+- `pom.xml` — Maven build and dependency configuration
 
-## Setup and Run
+## Prerequisites
 
-1.  **Prerequisites**:
-    *   JDK 17 or later
-    *   Maven 3.2+
-    *   MySQL server running
+- JDK 17 or later
+- Maven 3.2 or later
+- MySQL server
 
-2.  **Database Configuration**:
-    *   Open `src/main/resources/application.properties`.
-    *   Update `spring.datasource.url`, `spring.datasource.username`, and `spring.datasource.password` to match your MySQL setup. The application is configured to create the database `gestionfoyer` if it does not exist.
+## Configure the database
 
-3.  **Build the project**:
-    ```bash
-    mvn clean install
-    ```
+The default configuration connects to `localhost:3306/gestionfoyer` as `root` with an empty password. Update `src/main/resources/application.properties` to match your local MySQL setup before running the application. Do not commit real passwords or other secrets.
 
-4.  **Run the application**:
-    ```bash
-    java -jar target/gestionfoyer-0.0.1-SNAPSHOT.jar
-    ```
+> **Warning:** The current configuration sets `spring.jpa.hibernate.ddl-auto=create-drop`. On startup, Hibernate recreates the schema and drops it when the application shuts down. This can delete existing data. Use only with disposable local data; change this setting before connecting to any database whose data must be retained.
 
-The application will start on port `8080`.
+## Build and run
 
-## Verification
+```bash
+mvn clean verify
+mvn spring-boot:run
+```
 
-*   Upon starting, the application will drop and re-create the database schema based on the entities.
-*   A `CommandLineRunner` is configured to seed the database with sample data, including universities, foyers, blocs, chambres, and students.
-*   You can connect to your MySQL database using a tool like MySQL Workbench to verify that the tables have been created and populated with data.
-*   The following tables should be created: `universite`, `foyer`, `bloc`, `chambre`, `etudiant`, `reservation`, and the join table `reservation_etudiant`.
-*   Check the application logs for output from the scheduler and AOP aspect.
+Alternatively, package the application and run the generated JAR:
+
+```bash
+mvn clean package
+java -jar target/gestionfoyer-0.0.1-SNAPSHOT.jar
+```
+
+The application listens on port `8080` by default.
+
+## Development notes
+
+A `CommandLineRunner` currently seeds sample residence and student data. Review the application configuration and seed logic before using a non-disposable database. Run `mvn test` to execute the test suite.
+
+## Contributing
+
+Keep changes focused, preserve existing project conventions, and include tests for behavior changes. Before submitting a pull request, run `mvn clean verify` and document any configuration or database changes.
